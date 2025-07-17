@@ -7,9 +7,6 @@ node_modules/
 # Logs
 *.log
 
-# System files
-db.js
-
 # Editor-specific files
 .vscode/
 .idea/

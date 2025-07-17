@@ -1,0 +1,27 @@
+<!-- Sidebar Navigation -->
+<div id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+        <img src="/images/postbanklogo.jpg" alt="Postbank Logo" style="height: 40px; width: auto;">
+        <button class="close-btn" onclick="closeNav()">×</button>
+    </div>
+    <a href="/dashboard" class="<%= currentPage === 'dashboard' ? 'active' : '' %>">Dashboard</a>
+    <a href="/logout" id="logoutLink">Logout</a>
+</div>
+
+<!-- Top Bar -->
+<div class="top-bar d-flex justify-content-between align-items-center">
+  <span class="burger-menu" onclick="openNav()">☰</span>
+  <div class="top-bar-title ms-3">Postbank Service Monitor</div>
+  <div class="theme-toggle-container me-3">
+    <label class="theme-toggle-label">
+      <script>
+          const isDarkInitial = document.documentElement.getAttribute('data-theme-initial') === 'dark';
+          document.write(`<input type="checkbox" id="themeToggleInput" class="theme-toggle-input" ${isDarkInitial ? 'checked' : ''}>`);
+      </script>
+      <span class="theme-toggle-slider">
+        <i class="theme-icon bi bi-sun"></i>
+        <i class="theme-icon bi bi-moon"></i>
+      </span>
+    </label>
+  </div>
+</div>

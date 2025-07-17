@@ -1,0 +1,296 @@
+:root {
+  --toggle-bg-off: #6c757d;
+  --toggle-bg-on: #007bff;
+  --toggle-knob-bg: #ffffff;
+  --bg-light: #f0f2f5;
+  --text-light: #333;
+  --card-bg-light: #fff;
+
+  --bg-dark: #1e1e1e;
+  --text-dark: #e0e0e0;
+  --card-bg-dark: #2b2b2b;
+
+  --bg-sidebar: #ffffff;
+  --sidebar-text: #444;
+  --sidebar-hover-bg: #e6f0fa;
+  --sidebar-hover-text: #007bff;
+}
+
+html.dark-mode {
+  --bg-sidebar: #2c2c2c;
+  --sidebar-text: #e0e0e0;
+  --sidebar-hover-bg: #3a3a3a;
+  --sidebar-hover-text: #4da8ff;
+}
+
+/* Base styles */
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background-color: var(--bg-light);
+  color: var(--text-light);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+html.dark-mode body {
+  background-color: var(--bg-dark);
+  color: var(--text-dark);
+}
+
+.top-bar {
+  background-color: #fff;
+  padding: 17px 20px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+
+html.dark-mode .top-bar {
+  background-color: #2c2c2c;
+}
+
+.top-bar-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.container {
+  flex: 1;
+  padding-bottom: 20px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text-light);
+  padding: 0.375rem;
+  margin-top: 20px;
+}
+
+
+html.dark-mode .page-title {
+  color: var(--text-dark);
+}
+
+.card {
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.card-body {
+  background-color: var(--card-bg-light);
+  color: var(--text-light);
+}
+
+html.dark-mode .card-body {
+  background-color: var(--card-bg-dark);
+  color: var(--text-dark);
+}
+
+/* Modal adjustments for dark mode */
+html.dark-mode .modal-content {
+  background-color: #2c2c2c;
+  color: #e0e0e0;
+}
+
+/* Dark Mode: Modal Input Styles */
+.dark-mode .modal-content {
+  background-color: #1e1e1e !important;
+  color: #f1f1f1 !important;
+}
+
+.form-control {
+  border: 1px solid #999 !important; /* Darker border */
+}
+
+.form-control:focus {
+  border-color: #007bff !important;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25) !important;
+}
+
+.dark-mode .modal-content input.form-control,
+.dark-mode .modal-content input[type="text"],
+.dark-mode .modal-content input[type="url"] {
+  background-color: #2c2c2c !important;
+  color: #f1f1f1 !important;
+  border: 1px solid #555 !important;
+}
+
+.dark-mode .modal-content input.form-control:focus {
+  border-color: #0d6efd !important;
+  box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.5) !important;
+}
+
+/* Autofill fix inside modal */
+.dark-mode .modal-content input:-webkit-autofill,
+.dark-mode .modal-content input:-webkit-autofill:hover,
+.dark-mode .modal-content input:-webkit-autofill:focus,
+.dark-mode .modal-content input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0px 1000px #2c2c2c inset !important;
+  -webkit-text-fill-color: #f1f1f1 !important;
+  caret-color: #f1f1f1 !important;
+  border: 1px solid #555 !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Placeholder fix */
+.dark-mode .modal-content input::placeholder {
+  color: #cccccc !important;
+  opacity: 1 !important;
+}
+
+/* Close (X) button fix */
+.dark-mode .modal-header .btn-close {
+  filter: invert(1); /* Inverts the black icon to white */
+  opacity: 0.8;
+}
+
+.dark-mode .modal-header .btn-close:hover {
+  opacity: 1;
+}
+
+
+/* Fix modal header/footer borders in light and dark mode */
+.modal-header,
+.modal-footer {
+  border-color: #bbb !important; /* Darker separator line */
+}
+
+.dark-mode .modal-header,
+.dark-mode .modal-footer {
+  border-color: #444 !important; /* Softer dark gray border */
+}
+
+
+.dark-mode .text-muted {
+  color: #aaaaaa !important;
+}
+
+
+
+/* Fixed footer */
+.footer {
+    padding: 30px 20px;
+    background-color: #333;
+    color: #ccc;
+    text-align: center;
+    font-size: 14px;
+    margin-top: auto;
+}
+
+.footer a {
+    color: #00aaff;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+}
+
+
+/* Sidebar styles */
+.sidebar {
+  background-color: var(--bg-sidebar, #2c2c2c);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 260px;
+  transform: translateX(-100%);
+  transition: transform 0.4s ease-in-out;
+  z-index: 1050;
+  padding-top: 0;
+}
+
+body.sidebar-open .sidebar {
+  transform: translateX(0);
+}
+
+.sidebar a {
+  display: block;
+  padding: 12px 20px;
+  color: var(--sidebar-text, #e0e0e0);
+  text-decoration: none;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.sidebar a.active {
+  background-color: var(--sidebar-hover-bg, #3a3a3a);
+  color: var(--sidebar-hover-text, #4da8ff);
+  border-left: 3px solid var(--sidebar-hover-text, #4da8ff);
+}
+
+.sidebar a:hover {
+  background-color: var(--sidebar-hover-bg, #3a3a3a);
+  color: var(--sidebar-hover-text, #4da8ff);
+}
+
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  z-index: 1049;
+  display: none;
+}
+
+body.sidebar-open .sidebar-overlay {
+  display: block;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  border-bottom: 1px solid #ccc; /* default for light mode */
+}
+
+html.dark-mode .sidebar-header {
+  border-bottom: 1px solid #444; /* darker border for dark mode */
+}
+
+.main-content {
+  margin-top: 0px !important;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 0;
+  transition: margin-left 0.4s ease-in-out;
+  padding-top: 10px !important;
+}
+
+body.sidebar-open .main-content {
+  margin-left: 260px;
+}
+
+/* Background for the area that holds the service cards */
+#servicesContainer {
+  background-color: #f1f1f1; /* slightly darker gray for better separation */
+  padding: 20px;
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode override */
+html.dark-mode #servicesContainer {
+  background-color: #2a2a2a; /* darker than before */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6); /* darker shadow */
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.col-md-4 {
+  margin-top: 5px !important;
+  margin-bottom: 5px !important;
+}

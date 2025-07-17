@@ -8,8 +8,7 @@ node_modules/
 *.log
 
 # System files
-# .DS_Store
-# Thumbs.db
+db.js
 
 # Editor-specific files
 .vscode/

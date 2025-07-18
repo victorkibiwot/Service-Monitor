@@ -86,11 +86,15 @@
 
         if (error) {
             Swal.fire({
-            icon: 'error',
-            title: 'Error!',
-            text: decodeURIComponent(error),
-            timer: 2000,
-            showConfirmButton: false
+                icon: 'error',
+                title: 'Error!',
+                text: decodeURIComponent(error),
+                timer: 2000,
+                showConfirmButton: false
+            }).then(() => {
+                // Clean the URL to remove query params (without reloading the page)
+                const cleanUrl = window.location.origin + window.location.pathname;
+                window.history.replaceState({}, document.title, cleanUrl);
             });
         }
     </script>

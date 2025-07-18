@@ -39,6 +39,67 @@ router.post('/api/services', validateToken, async (req, res) => {
   }
 });
 
+// Update existing service
+router.put('/api/services/:name', validateToken, async (req, res) => {
+  const originalName = req.params.name;
+  const { name: updatedName, endpoint: updatedEndpoint } = req.body;
+
+  if (!updatedName || !updatedEndpoint) {
+    return res.status(400).json({ error: 'Name and endpoint are required' });
+  }
+
+  try {
+    // Check if the updated name or endpoint already exists in another record
+    const duplicateCheck = await pool.query(
+      'SELECT * FROM services WHERE (name = $1 OR endpoint = $2) AND name != $3',
+      [updatedName, updatedEndpoint, originalName]
+    );
+
+    if (duplicateCheck.rowCount > 0) {
+      return res.status(409).json({ error: 'Service name or endpoint already exists' });
+    }
+
+    // Proceed with update
+    const result = await pool.query(
+      'UPDATE services SET name = $1, endpoint = $2 WHERE name = $3 RETURNING *',
+      [updatedName, updatedEndpoint, originalName]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Service not found' });
+    }
+
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error('Error updating service:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+
+// Delete a service
+router.delete('/api/services/:name', validateToken, async (req, res) => {
+  const name = req.params.name;
+
+  try {
+    const result = await pool.query(
+      'DELETE FROM services WHERE name = $1 RETURNING *',
+      [name]
+    );
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Service not found' });
+    }
+
+    res.json({ message: `Service "${name}" deleted.` });
+  } catch (err) {
+    console.error('Error deleting service:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+
+
 // Ping services and update status
 router.get('/api/services/ping', validateToken, async (req, res) => {
   try {

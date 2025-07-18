@@ -26,9 +26,16 @@
     <div class="container page-wrapper">
       <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="page-title">Services</h2>
-        <button class="btn btn-primary" onclick="showAddModal()">
-          <i class="bi bi-plus-circle me-1"></i> Add Service
-        </button>
+        <div class="btn-group">
+          <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-plus-circle me-1"></i> Update Services
+          </button>
+          <ul class="dropdown-menu text-center">
+            <li><a class="dropdown-item" href="#" onclick="showAddModal()">Add Service</a></li>
+            <li><a class="dropdown-item" href="#" onclick="enterEditMode()">Edit Service</a></li>
+            <li><a class="dropdown-item text-danger" href="#" onclick="enterDeleteMode()">Delete Service</a></li>
+          </ul>
+        </div>
       </div>
 
       <div id="servicesContainer" class="row g-4"></div>
@@ -61,6 +68,36 @@
         </div>
       </div>
     </div>
+
+    <!-- Edit Service Modal (Bootstrap structure) -->
+    <div class="modal fade" id="editServiceModal" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Edit Service</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <form id="editServiceForm">
+              <div class="mb-3">
+                <label for="editServiceName" class="form-label">Service Name</label>
+                <input type="text" class="form-control" id="editServiceName" required />
+              </div>
+              <div class="mb-3">
+                <label for="editServiceUrl" class="form-label">Health Endpoint URL</label>
+                <input type="url" class="form-control" id="editServiceUrl" required />
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Update Service</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
 
     <%- include('footer') %>
   </div>

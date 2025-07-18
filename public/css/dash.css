@@ -75,7 +75,6 @@ html.dark-mode .top-bar {
   margin-top: 20px;
 }
 
-
 html.dark-mode .page-title {
   color: var(--text-dark);
 }
@@ -260,7 +259,7 @@ html.dark-mode .sidebar-header {
 }
 
 .main-content {
-  margin-top: 0px !important;
+  margin-top: 15px !important;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -281,6 +280,7 @@ body.sidebar-open .main-content {
   transition: background-color 0.3s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   border: 1px solid rgba(0, 0, 0, 0.1);
+  margin-top: 15px;
 }
 
 /* Dark mode override */
@@ -293,4 +293,83 @@ html.dark-mode #servicesContainer {
 .col-md-4 {
   margin-top: 5px !important;
   margin-bottom: 5px !important;
+}
+
+/* Edit mode styling */
+.service-card.card-edit-mode {
+  border: 2px dashed;
+  animation: pulse 1.5s infinite;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+/* Edit mode styling */
+.service-card.card-edit-mode:hover {
+  border: 2px solid;
+}
+
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.5);
+  }
+  70% {
+    transform: scale(1.02);
+    box-shadow: 0 0 10px 10px rgba(0, 123, 255, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+  }
+}
+
+.card-edit-mode::after {
+  content: "🛠️ Edit";
+  font-weight: bold;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #0d6efd;
+  color: white;
+  padding: 2px 6px;
+  font-size: 12px;
+  border-radius: 4px;
+}
+
+
+/* Delete Service styles */
+@keyframes wiggle {
+  0% { transform: rotate(-1deg); }
+  50% { transform: rotate(1deg); }
+  100% { transform: rotate(-1deg); }
+}
+
+.service-card.card-delete-mode {
+  border: 2px dashed;
+  animation: wiggle 0.3s infinite;
+  cursor: pointer;
+  position: relative;
+}
+
+.service-card.card-delete-mode:hover {
+  border: 2px solid;
+}
+
+.card-delete-mode::after {
+  content: "🗑️ Delete";
+  font-weight: bold;
+  top: 10px;
+  right: 10px;
+  position: absolute;
+  background: #dc3545;
+  color: white;
+  padding: 2px 6px;
+  font-size: 12px;
+  border-radius: 4px;
+  z-index: 5;
+}
+
+html.dark-mode .card-delete-mode::after {
+  background: #c82333;
 }

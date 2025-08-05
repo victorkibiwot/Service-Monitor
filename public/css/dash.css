@@ -405,24 +405,16 @@ html.dark-mode #serviceSearchInput {
   border: 1px solid #555;
 }
 
-input[type="text"], input[type="search"] {
-  border: 1px solid #444;      /* Dark gray border */
-  background-color: #1e1e1e;   /* Dark background */
-  color: #fff;                 /* White text */
-}
-
-input[type="text"], input[type="search"] {
+html.dark-mode input[type="text"],
+html.dark-mode input[type="search"] {
   border: 1px solid #555;
   background-color: #121212;
   color: #eee;
-  padding: 8px 12px;
-  border-radius: 6px;
-  outline: none;
 }
 
-input[type="text"]:focus,
-input[type="search"]:focus {
-  border-color: #888; /* Slightly lighter when focused */
+html.dark-mode input[type="text"]:focus,
+html.dark-mode input[type="search"]:focus {
+  border-color: #888;
 }
 
 

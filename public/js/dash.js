@@ -112,17 +112,18 @@ const renderServices = (services) => {
     const card = document.createElement('div');
     card.className = 'col-md-4';
     card.innerHTML = `
-      <div class="card border-${color} shadow h-100 service-card position-relative" data-name="${name}" data-endpoint="${endpoint}">
-        <div class="card-body">
-          <h5 class="card-title text-${color}">${name}</h5>
-          <p class="card-text small">${endpoint}</p>
-          <p class="card-text"><strong>Status:</strong> <span class="badge bg-${color}">${status || 'UNKNOWN'}</span></p>
-          <p class="card-text"><small class="text-muted">Last checked: ${last_checked ? new Date(last_checked).toLocaleString() : 'Never'}</small></p>
+      <div class="modern-card service-card h-100 status-${color} position-relative p-4" data-name="${name}" data-endpoint="${endpoint}">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="card-title mb-0 text-${color}">${name}</h5>
+          <span class="status-dot ${status?.toLowerCase() || 'warning'}"></span>
         </div>
+        <div class="card-text service-url mb-2">${endpoint}</div>
+        <div class="card-text mb-2"><strong>Status:</strong> <span class="badge bg-${color}">${status || 'UNKNOWN'}</span></div>
+        <div><small class="card-text text-muted">Last checked: ${last_checked ? new Date(last_checked).toLocaleString() : 'Never'}</small></div>
       </div>
     `;
 
-    const cardInner = card.querySelector('.card');
+    const cardInner = card.querySelector('.modern-card');
 
     // Shared card click handler based on mode
     cardInner.addEventListener('click', () => {
@@ -401,7 +402,7 @@ function filterServices() {
   let anyVisible = false;
 
   columns.forEach(col => {
-    const card = col.querySelector(".card");
+    const card = col.querySelector(".modern-card");
     const name = card.querySelector(".card-title")?.textContent.toLowerCase() || "";
     const url = card.querySelector(".card-text")?.textContent.toLowerCase() || "";
     const matches = name.includes(filter) || url.includes(filter);

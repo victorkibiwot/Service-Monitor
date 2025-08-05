@@ -24,8 +24,16 @@
   <div class="sidebar-overlay"></div>
   <div id="main" class="main-content">
     <div class="container page-wrapper">
-      <div class="d-flex justify-content-between align-items-center mb-4">
+      <div class="d-flex align-items-center justify-content-between align-items-center flex-wrap gap-3 mb-4">
         <h2 class="page-title">Services</h2>
+        <div class="search-bar-container" style="flex-grow: 0.4; min-width: 200px;">
+          <input
+            type="text"
+            class="form-control"
+            id="serviceSearchInput"
+            placeholder="Search services..."
+          />
+        </div>
         <div class="btn-group">
           <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="bi bi-plus-circle me-1"></i> Update Services

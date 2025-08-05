@@ -59,6 +59,7 @@ async function fetchServices() {
 
     const services = await res.json();
     renderServices(services);
+    filterServices();
   } catch (err) {
     console.error('Failed to fetch services:', err);
   }
@@ -392,20 +393,48 @@ document.getElementById('addServiceModal').addEventListener('show.bs.modal', () 
 fetchServices();
 setInterval(() => fetch('/api/services/ping').then(fetchServices), 3000);
 
-/**
- * Logout handler
- */
-const logoutLink = document.getElementById('logoutLink');
-if (logoutLink) {
-    logoutLink.addEventListener('click', async function (e) {
-        e.preventDefault();
-        submitForm({
-            form: null,
-            url: '/logout',
-            method: 'GET',
-            loadingTitle: 'Logging out...',
-            successTitle: 'Logged Out!',
-            errorTitle: 'Logout Failed',
-        });
-    });
+
+function filterServices() {
+  const input = document.getElementById("serviceSearchInput");
+  const filter = input?.value.toLowerCase() || "";
+  const columns = document.querySelectorAll("#servicesContainer .col-md-4");
+  let anyVisible = false;
+
+  columns.forEach(col => {
+    const card = col.querySelector(".card");
+    const name = card.querySelector(".card-title")?.textContent.toLowerCase() || "";
+    const url = card.querySelector(".card-text")?.textContent.toLowerCase() || "";
+    const matches = name.includes(filter) || url.includes(filter);
+    col.style.display = matches ? "block" : "none";
+    if (matches) anyVisible = true;
+  });
+
+  const messageId = "noServicesMessage";
+  let messageElem = document.getElementById(messageId);
+
+  if (!anyVisible) {
+    if (!messageElem) {
+      messageElem = document.createElement("div");
+      messageElem.id = messageId;
+      messageElem.className = "text-center mt-0 text-muted no-services-message";
+      messageElem.innerText = "🚫 No matching services found.";
+      document.getElementById("servicesContainer").appendChild(messageElem);
+    }
+  } else {
+    if (messageElem) messageElem.remove();
+  }
 }
+
+
+function debounce(func, delay = 300) {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), delay);
+  };
+}
+
+const debouncedFilter = debounce(filterServices);
+
+document.getElementById("serviceSearchInput").addEventListener("input", debouncedFilter);
+

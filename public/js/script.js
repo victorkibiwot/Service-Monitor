@@ -22,24 +22,6 @@ if (loginForm) {
     });
 }
 
-/**
- * Logout handler
- */
-const logoutLink = document.getElementById('logoutLink');
-if (logoutLink) {
-    logoutLink.addEventListener('click', async function (e) {
-        e.preventDefault();
-        submitForm({
-            form: null,
-            url: '/logout',
-            method: 'GET',
-            loadingTitle: 'Logging out...',
-            successTitle: 'Logged Out!',
-            errorTitle: 'Logout Failed',
-        });
-    });
-}
-
 
 /**
  * Toggle between light and dark themes
@@ -77,4 +59,23 @@ function initializeThemeToggleBtn() {
 }
 
 initializeThemeToggleBtn();
+
+
+/**
+ * Logout handler
+ */
+const logoutLink = document.getElementById('logoutLink');
+if (logoutLink) {
+    logoutLink.addEventListener('click', async function (e) {
+        e.preventDefault();
+        submitForm({
+            form: null,
+            url: '/logout',
+            method: 'GET',
+            loadingTitle: 'Logging out...',
+            successTitle: 'Logged Out!',
+            errorTitle: 'Logout Failed',
+        });
+    });
+}
 

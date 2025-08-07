@@ -25,7 +25,16 @@
   <div id="main" class="main-content">
     <div class="container page-wrapper">
       <div class="d-flex align-items-center justify-content-between align-items-center flex-wrap gap-3 mb-4">
-        <h2 class="page-title">Services</h2>
+        <!-- <h2 class="page-title">Services</h2> -->
+         <div class="d-flex flex-column">
+          <h2 class="page-title mb-1">Services</h2>
+          <div id="envToggle" class="d-flex align-items-center gap-2">
+            <button class="env-btn active" data-env="live">Live</button>
+            <div class="env-divider"></div>
+            <button class="env-btn" data-env="test">Test</button>
+          </div>
+        </div>
+
         <div class="search-bar-container" style="flex-grow: 0.4; min-width: 200px;">
           <input
             type="text"

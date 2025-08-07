@@ -446,3 +446,18 @@ if (servSearch) {
   servSearch.addEventListener("input", debouncedFilter);
 }
 
+// Switching Environment
+let currentEnv = 'live'; // default
+
+document.querySelectorAll('.env-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.env-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentEnv = btn.dataset.env;
+
+    // Later: fetch services for selected env
+    console.log(`Switched to: ${currentEnv}`);
+  });
+});
+
+

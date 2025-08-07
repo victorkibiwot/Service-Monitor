@@ -425,7 +425,18 @@ html.dark-mode input[type="search"]:focus {
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  box-shadow: 0 0 15px rgba(0, 123, 255, 0.3); /* Customize the glow color */
+  box-shadow: 0 0 15px rgba(18, 46, 44, 0.3); /* Customize the glow color */
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+/* New Design Style */
+html.dark-mode .modern-card:hover::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 15px rgba(193, 217, 242, 0.3); /* Customize the glow color */
   opacity: 0.6;
   pointer-events: none;
 }
@@ -467,4 +478,93 @@ html.dark-mode .status-warning { background: rgba(255, 193, 7, 0.2); }
   .modern-card {
     padding: 1.25rem;
   }
+}
+
+
+#envToggle {
+  font-size: 13px;
+  margin-left: 2px;
+  user-select: none;
+}
+
+.env-btn {
+  border: none;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  color: var(--bs-body-color);
+  padding: 4px 10px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.env-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.env-btn.active {
+  background: rgba(255, 255, 255, 0.35);
+  font-weight: 600;
+}
+
+.env-divider {
+  width: 1px;
+  height: 16px;
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Env Styling update */
+/* Fix vertical alignment between title and env buttons */
+.page-title + #envToggle {
+  margin-top: -4px; /* Align env toggle with h2 text */
+}
+
+/* Light mode env button styling */
+.env-btn {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: rgba(240, 240, 240, 0.7);
+  color: #333;
+  padding: 4px 10px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.env-btn:hover {
+  background: rgba(220, 220, 220, 0.9);
+}
+
+.env-btn.active {
+  background: rgba(200, 200, 200, 0.9);
+  font-weight: 600;
+}
+
+.env-divider {
+  width: 1px;
+  height: 16px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Dark mode overrides */
+html.dark-mode .env-btn {
+  background: rgba(255, 255, 255, 0.15);
+  color: #f1f1f1;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+html.dark-mode .env-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+html.dark-mode .env-btn.active {
+  background: rgba(255, 255, 255, 0.35);
+  font-weight: 600;
+}
+
+html.dark-mode .env-divider {
+  background: rgba(255, 255, 255, 0.3);
 }

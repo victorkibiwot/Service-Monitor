@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { axiosInstance, axiosInstance2, axiosInstance3} = require('../utils/axios');
+const { axiosInstance, axiosInstance2, axiosInstance3, axiosInstance4} = require('../utils/axios');
 const pool = require('../db');
 const axios = require('axios');
 const validateToken = require('./middlewares/validateToken');
@@ -19,7 +19,7 @@ router.get('/transactions', (req, res) => {
 // API route to return transaction uptime info
 router.get('/api/latest-sequence', async (req, res) => {
   try {
-    const response = await axiosInstance3.get('/api/getLatestSequence');
+    const response = await axiosInstance4.get('/api/getLatestSequence');
     const { latest_sequence, daily_transactions, time, code = 200 } = response.data;
 
     res.json({
@@ -33,7 +33,6 @@ router.get('/api/latest-sequence', async (req, res) => {
     res.status(500).json({ code: 500, error: 'Failed to fetch latest sequence' });
   }
 });
-
 
 
 // Get all services

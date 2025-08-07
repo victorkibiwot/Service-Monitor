@@ -1,0 +1,114 @@
+/* ---------------------------------
+   Transaction Monitor - Theme Fixes
+---------------------------------- */
+
+/* Fix card border color in dark mode */
+html.dark-mode .card {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  background-color: var(--card-bg-dark);
+}
+
+.card {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Card Header Styling */
+.card-header.bg-activity-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #ddd;
+}
+
+html.dark-mode .card-header.bg-activity-header {
+  background-color: #2e2e2e;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e0e0e0;
+}
+
+/* Chart canvas inherits parent background */
+#transactionChart {
+  background-color: transparent;
+}
+
+/* Metrics Box Styling */
+.metrics-box {
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  transition: background-color 0.3s;
+}
+
+html.dark-mode .metrics-box {
+  background-color: #2a2a2a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Status Badge Adjustments */
+#statusBadge {
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  border-radius: 20px;
+}
+
+html.dark-mode #statusBadge {
+  color: #fff;
+}
+
+.badge.bg-success {
+  background-color: #28a745 !important;
+}
+
+.badge.bg-danger {
+  background-color: #dc3545 !important;
+}
+
+.badge.bg-warning {
+  background-color: #ffc107 !important;
+  color: #212529 !important;
+}
+
+/* Improve spacing between elements in card */
+.card .card-body p {
+  margin-bottom: 0.5rem;
+}
+
+/* Fix muted text color in dark mode */
+html.dark-mode .text-muted {
+  color: #b0b0b0 !important;
+}
+
+/* Optional: Improve card hover for modern effect */
+.card.shadow-sm:hover {
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+/* Improve chart section padding */
+.card-body canvas {
+  margin-top: 10px;
+}
+
+/* Fix border color under card-header in dark mode */
+html.dark-mode .card-header.border-bottom {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Center the card title */
+.card-header h5 {
+  text-align: center;
+}
+
+
+/* Yellow glow animation for changing daily tx count */
+@keyframes glowHighlight {
+  0%   { background-color: rgba(255, 193, 7, 0.3); box-shadow: 0 0 4px rgba(255, 193, 7, 0.5); }
+  50%  { background-color: rgba(255, 193, 7, 0.1); box-shadow: 0 0 8px rgba(255, 193, 7, 0.6); }
+  100% { background-color: transparent; box-shadow: none; }
+}
+
+.daily-glow {
+  animation: glowHighlight 1.2s ease-in-out;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+}

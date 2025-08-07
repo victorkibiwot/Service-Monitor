@@ -274,7 +274,7 @@ body.sidebar-open .main-content {
 
 /* Background for the area that holds the service cards */
 #servicesContainer {
-  background-color: #f1f1f1; /* slightly darker gray for better separation */
+  background-color: #fbf9f9; /* slightly darker gray for better separation */
   padding: 20px;
   border-radius: 10px;
   transition: background-color 0.3s ease;

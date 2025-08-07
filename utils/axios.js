@@ -12,5 +12,11 @@ const axiosInstance2 = axios.create({
   withCredentials: true // Enable sending cookies with requests
 });
 
+// Create an Axios instance to persist cookies
+const axiosInstance3 = axios.create({
+  baseURL: process.env.GCP_URL3,
+  withCredentials: true // Enable sending cookies with requests
+});
 
-module.exports = { axiosInstance, axiosInstance2 };
+
+module.exports = { axiosInstance, axiosInstance2, axiosInstance3 };

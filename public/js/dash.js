@@ -225,56 +225,59 @@ const openEditModal = (name, endpoint) => {
 const showAddModal = () => new bootstrap.Modal(document.getElementById('addServiceModal')).show();
 
 
-document.getElementById('addServiceForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const name = document.getElementById('serviceName').value.trim();
-    const endpoint = document.getElementById('serviceUrl').value.trim();
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+const addServForm = document.getElementById('addServiceForm');
+if (addServForm){
+  addServForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('serviceName').value.trim();
+      const endpoint = document.getElementById('serviceUrl').value.trim();
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
-    Swal.fire({
-      title: 'Please wait...',
-      text: 'Adding Service...',
-      allowOutsideClick: false,
-      allowEscapeKey: false,
-      didOpen: () => {
-        Swal.showLoading();
-      }
-    });
+      Swal.fire({
+        title: 'Please wait...',
+        text: 'Adding Service...',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
 
-    
-    const res = await fetch('/api/services', {
-    method: 'POST',
-    headers: { 
-        'Content-Type': 'application/json',
-        'CSRF-Token': csrfToken
-     },
-    body: JSON.stringify({ name, endpoint  })
-    });
+      
+      const res = await fetch('/api/services', {
+      method: 'POST',
+      headers: { 
+          'Content-Type': 'application/json',
+          'CSRF-Token': csrfToken
+      },
+      body: JSON.stringify({ name, endpoint  })
+      });
 
-    if (res.ok) {
-      document.querySelector('.page-title').textContent = 'Services';
-      bootstrap.Modal.getInstance(document.getElementById('addServiceModal')).hide();
-      fetchServices();
+      if (res.ok) {
+        document.querySelector('.page-title').textContent = 'Services';
+        bootstrap.Modal.getInstance(document.getElementById('addServiceModal')).hide();
+        fetchServices();
+        Swal.close();
+        Swal.fire({
+          title: 'Success',
+          text: 'Service added!',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1000
+        });
+      } else {
+      const err = await res.json();
       Swal.close();
       Swal.fire({
-        title: 'Success',
-        text: 'Service added!',
-        icon: 'success',
+        title: 'Error',
+        text: err.error || 'Failed to add service',
+        icon: 'error',
         showConfirmButton: false,
-        timer: 1000
+        timer: 2000
       });
-    } else {
-    const err = await res.json();
-    Swal.close();
-    Swal.fire({
-      title: 'Error',
-      text: err.error || 'Failed to add service',
-      icon: 'error',
-      showConfirmButton: false,
-      timer: 2000
-    });
-    }
-});
+      }
+  });
+}
 
 
 // Delete Services functionality
@@ -381,13 +384,14 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-
-document.getElementById('addServiceModal').addEventListener('show.bs.modal', () => {
-  if (isDeleteMode) exitDeleteMode();
-  if (isEditMode) exitToHomeState();
-  document.querySelector('.page-title').textContent = 'Add Service';
-});
-
+const addServMod = document.getElementById('addServiceModal');
+if (addServMod){
+  addServMod.addEventListener('show.bs.modal', () => {
+    if (isDeleteMode) exitDeleteMode();
+    if (isEditMode) exitToHomeState();
+    document.querySelector('.page-title').textContent = 'Add Service';
+  });
+}
 
 
 
@@ -437,5 +441,8 @@ function debounce(func, delay = 300) {
 
 const debouncedFilter = debounce(filterServices);
 
-document.getElementById("serviceSearchInput").addEventListener("input", debouncedFilter);
+const servSearch = document.getElementById("serviceSearchInput");
+if (servSearch) {
+  servSearch.addEventListener("input", debouncedFilter);
+}
 

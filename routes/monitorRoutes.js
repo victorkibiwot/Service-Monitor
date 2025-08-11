@@ -16,18 +16,41 @@ router.get('/transactions', (req, res) => {
 });
 
 
-// API route to return transaction uptime info
+// API route to return latest transaction info
 router.get('/api/latest-sequence', async (req, res) => {
   try {
-    const response = await axiosInstance4.get('/api/getLatestSequence');
+    const response = await axiosInstance3.get('/api/getLatestSequence');
     const { latest_sequence, daily_transactions, time, code = 200 } = response.data;
 
     res.json({
       code,
       latest_sequence,
       daily_transactions,
-      last_updated: new Date(time).toISOString(),
+      time
     });
+  } catch (error) {
+    console.error('Error fetching latest sequence:', error.message);
+    res.status(500).json({ code: 500, error: 'Failed to fetch latest sequence' });
+  }
+});
+
+
+// API route to return last half hour sequence of transactions
+router.get('/api/history', async (req, res) => {
+  try {
+    const response = await axiosInstance3.get('/api/getTransactionData');
+    const {code = 200, time, transactions} = response.data;
+
+    if (!Array.isArray(transactions)) {
+      return res.status(500).json({ code: 500, error: 'Invalid data format from upstream API' });
+    }
+
+    res.json({
+      code,
+      time,
+      transactions
+    });
+    
   } catch (error) {
     console.error('Error fetching latest sequence:', error.message);
     res.status(500).json({ code: 500, error: 'Failed to fetch latest sequence' });

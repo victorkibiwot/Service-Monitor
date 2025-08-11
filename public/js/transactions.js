@@ -27,97 +27,123 @@ const txChart = new Chart(ctx, {
       },
       y: {
         title: { display: true, text: 'Transactions' },
-        beginAtZero: false, // Allow dynamic minimum
+        beginAtZero: false,
         ticks: {
-          callback: function (value) {
-            return value.toLocaleString(); // Optional: format with commas
-          }
+          callback: (value) => value.toLocaleString()
         }
       }
     },
-    plugins: {
-      legend: { display: false }
-    }
+    plugins: { legend: { display: false } }
   }
 });
-
 
 let lastSeq = null;
 let lastChange = null;
 const txHistory = [];
 
-const fetchSequenceData = async () => {
+// --- API calls ---
+const fetchHistory = async () => {
   try {
-    const res = await fetch('/api/latest-sequence');
+    const res = await fetch('/api/history');
     return await res.json();
   } catch (err) {
-    console.error('Failed to fetch sequence data:', err);
+    console.error('Failed to fetch history:', err);
     return null;
   }
 };
 
+const fetchLatestData = async () => {
+  try {
+    const res = await fetch('/api/latest-sequence');
+    return await res.json();
+  } catch (err) {
+    console.error('Failed to fetch latest data:', err);
+    return null;
+  }
+};
+
+// --- Chart updates ---
+const updateChart = () => {
+  txChart.data.labels = txHistory.map(entry => entry.time);
+  txChart.data.datasets[0].data = txHistory.map(entry => entry.txCount);
+
+  const values = txChart.data.datasets[0].data;
+  const minVal = Math.min(...values);
+  const maxVal = Math.max(...values);
+  const padding = Math.max(10, (maxVal - minVal) * 0.1);
+
+  txChart.options.scales.y.min = Math.floor(minVal - padding);
+  txChart.options.scales.y.max = Math.ceil(maxVal + padding);
+
+  txChart.update();
+};
+
+// --- Initial history load ---
+const loadInitialHistory = async () => {
+  const data = await fetchHistory();
+  if (!data || data.code !== 200 || !Array.isArray(data.transactions)) return;
+
+  txHistory.length = 0; // Clear old data
+  data.transactions.forEach(item => {
+    txHistory.push({
+      time: new Date(Number(item.sysTime)),
+      txCount: item.tranNumber
+    });
+  });
+
+  updateChart();
+};
+
+// --- Incremental update ---
 const updateMonitor = async () => {
-    const data = await fetchSequenceData();
-    if (!data || data.code === 500) return;
+  const data = await fetchLatestData();
+  if (!data || data.code === 500) return;
 
-    const now = new Date();
-    const seq = data.latest_sequence;
-    const txCount = data.daily_transactions;
-    const fetchTime = new Date(data.last_updated);
+  const now = new Date();
+  const seq = data.latest_sequence;
+  const txCount = data.daily_transactions;
+  const fetchTime = new Date(Number(data.time));
 
-    const diffMins = lastSeq === seq && lastChange
+  const diffMins = lastSeq === seq && lastChange
     ? (now - lastChange) / 60000
     : 0;
 
-    let status = 'operational', badge = 'bg-success', icon = 'bi-check-circle';
-    if (diffMins > 30) [status, badge, icon] = ['critical', 'bg-danger', 'bi-exclamation-triangle'];
-    else if (diffMins > 20) [status, badge, icon] = ['warning', 'bg-warning', 'bi-exclamation-triangle'];
+  let status = 'operational', badge = 'bg-success', icon = 'bi-check-circle';
+  if (diffMins > 30) [status, badge, icon] = ['critical', 'bg-danger', 'bi-exclamation-triangle'];
+  else if (diffMins > 20) [status, badge, icon] = ['warning', 'bg-warning', 'bi-exclamation-triangle'];
 
-    // Update daily transactions with glow animation
-    const txEl = document.getElementById('dailyTransactionsValue');
-    const newText = Number(txCount).toLocaleString();
-    if (txEl && txEl.textContent !== newText) {
-        txEl.textContent = newText;
-        txEl.classList.remove('daily-glow');
-        void txEl.offsetWidth; // force reflow
-        txEl.classList.add('daily-glow');
-    }
+  const txEl = document.getElementById('dailyTransactionsValue');
+  const newText = Number(txCount).toLocaleString();
+  if (txEl && txEl.textContent !== newText) {
+    txEl.textContent = newText;
+    txEl.classList.remove('daily-glow');
+    void txEl.offsetWidth;
+    txEl.classList.add('daily-glow');
+  }
 
-    // Simple text updates for others (no animation)
-    document.getElementById('latestSequence').textContent = `Latest sequence: ${seq}`;
-    document.getElementById('latestUpdated').textContent = `Latest Transaction: ${fetchTime.toLocaleString()}`;
-    document.getElementById('statusBadge').className = `badge ${badge} fs-5 px-3 py-2 mb-2 d-inline-block`;
-    document.getElementById('statusBadge').innerHTML = `<i class="bi ${icon} me-1"></i> ${status.charAt(0).toUpperCase() + status.slice(1)}`;
+  document.getElementById('latestSequence').textContent = `Latest sequence: ${seq}`;
+  document.getElementById('latestUpdated').textContent = `Latest Transaction: ${fetchTime.toLocaleString()}`;
+  document.getElementById('statusBadge').className = `badge ${badge} fs-5 px-3 py-2 mb-2 d-inline-block`;
+  document.getElementById('statusBadge').innerHTML = `<i class="bi ${icon} me-1"></i> ${status.charAt(0).toUpperCase() + status.slice(1)}`;
 
-    if (seq !== lastSeq) {
-        lastSeq = seq;
-        lastChange = now;
-    }
+  if (seq !== lastSeq) {
+    lastSeq = seq;
+    lastChange = now;
+  }
 
-    // Maintain last 1 hour of history
-    txHistory.push({ time: fetchTime, txCount });
-    const oneHourAgo = Date.now() - 60 * 60 * 1000;
-    while (txHistory.length && new Date(txHistory[0].time).getTime() < oneHourAgo) {
+  // Push new data and maintain constant length
+  txHistory.push({ time: fetchTime, txCount });
+  if (txHistory.length > 30) { // keep same as initial history size
     txHistory.shift();
-    }
+  }
 
-    // Update chart
-    txChart.data.labels = txHistory.map(entry => entry.time);
-    txChart.data.datasets[0].data = txHistory.map(entry => entry.txCount);
-
-    // Dynamically adjust Y-axis scale
-    const values = txChart.data.datasets[0].data;
-    const minVal = Math.min(...values);
-    const maxVal = Math.max(...values);
-    const padding = Math.max(10, (maxVal - minVal) * 0.1); // Add 10% buffer or at least 10
-
-    txChart.options.scales.y.min = Math.floor(minVal - padding);
-    txChart.options.scales.y.max = Math.ceil(maxVal + padding);
-
-    txChart.update();
-
+  updateChart();
 };
 
-// Initial run + schedule every 5 seconds
-updateMonitor();
-setInterval(updateMonitor, 5000);
+// --- Run everything ---
+(async () => {
+  await loadInitialHistory().then(() => {
+    updateMonitor();
+  });
+  setInterval(updateMonitor, 60000);
+})();

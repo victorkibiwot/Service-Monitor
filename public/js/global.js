@@ -41,3 +41,22 @@ if (themeToggleInput) {
     localStorage.setItem('theme', document.documentElement.classList.contains('dark-mode') ? 'dark' : 'light');
   });
 }
+
+
+/**
+ * Logout handler
+ */
+const logoutLink = document.getElementById('logoutLink');
+if (logoutLink) {
+    logoutLink.addEventListener('click', async function (e) {
+        e.preventDefault();
+        submitForm({
+            form: null,
+            url: '/logout',
+            method: 'GET',
+            loadingTitle: 'Logging out...',
+            successTitle: 'Logged Out!',
+            errorTitle: 'Logout Failed',
+        });
+    });
+}

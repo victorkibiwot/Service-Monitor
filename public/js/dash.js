@@ -64,6 +64,17 @@ const renderServices = (services) => {
   const container = document.getElementById('servicesContainer');
   container.innerHTML = '';
 
+  const messageId = "noServicesMessage";
+
+  if (!services || services.length === 0) {
+    let messageElem = document.createElement("div");
+    messageElem.id = messageId;
+    messageElem.className = "text-center mt-0 text-muted no-services-message";
+    messageElem.innerText = `🚫 No services found for "${currentEnv}" environment.`;
+    container.appendChild(messageElem);
+    return;
+  }
+
   services.forEach(({ name, endpoint, status, last_checked }) => {
     const color = status?.toUpperCase() === 'UP' ? 'success' :
                   status?.toUpperCase() === 'DOWN' ? 'danger' : 'warning';

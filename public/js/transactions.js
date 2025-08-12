@@ -147,3 +147,16 @@ const updateMonitor = async () => {
   });
   setInterval(updateMonitor, 60000);
 })();
+
+
+document.querySelectorAll('#txnToggle .txn-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('#txnToggle .txn-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+
+        // Example: use data-type attribute to filter or update UI
+        const selectedType = this.getAttribute('data-type');
+        console.log('Selected Transaction Type:', selectedType);
+        // You can trigger your data loading here...
+    });
+});

@@ -29,7 +29,16 @@
   <div class="sidebar-overlay"></div>
   <div id="main" class="main-content">
         <div class="container page-wrapper">
-        <h2 class="page-title">Transaction Monitor</h2>
+        <h2 class="page-title mb-1">Transactions</h2>
+        <div id="txnToggle" class="d-flex align-items-center gap-2 mb-4">
+            <button class="txn-btn active" data-type="main">Main</button>
+            <div class="env-divider"></div>
+            <button class="txn-btn" data-type="b2c">B2C</button>
+            <div class="env-divider"></div>
+            <button class="txn-btn" data-type="c2b">C2B</button>
+            <div class="env-divider"></div>
+            <button class="txn-btn" data-type="esb">ESB</button>
+        </div>
 
         <!-- Status Summary Card -->
         <div class="card mb-4 text-center border shadow-sm">

@@ -1,6 +1,9 @@
+// Switching Environment
+let currentEnv = 'live'; // default
+
 async function fetchServices() {
   try {
-    const res = await fetch('/services');
+    const res = await fetch(`/services?env=${encodeURIComponent(currentEnv)}`);
 
     if (res.redirected) {
       // The session expired and server redirected us silently
@@ -65,6 +68,20 @@ const renderServices = (services) => {
     const color = status?.toUpperCase() === 'UP' ? 'success' :
                   status?.toUpperCase() === 'DOWN' ? 'danger' : 'warning';
 
+    // Parse and truncate the URL
+    let shortEndpoint = endpoint;
+    try {
+      const urlObj = new URL(endpoint);
+      // If port is specified, show protocol + host + port
+      // Otherwise, just protocol + host
+      shortEndpoint = urlObj.port 
+        ? `${urlObj.protocol}//${urlObj.hostname}:${urlObj.port}`
+        : `${urlObj.protocol}//${urlObj.hostname}`;
+    } catch (e) {
+      // Fallback if not a valid URL
+      shortEndpoint = endpoint;
+    }
+
     const card = document.createElement('div');
     card.className = 'col-md-4';
     card.innerHTML = `
@@ -73,7 +90,7 @@ const renderServices = (services) => {
           <h5 class="card-title mb-0 text-${color}">${name}</h5>
           <span class="status-dot ${status?.toLowerCase() || 'warning'}"></span>
         </div>
-        <div class="card-text service-url mb-2">${endpoint}</div>
+        <div class="card-text service-url mb-2">${shortEndpoint}</div>
         <div class="card-text mb-2"><strong>Status:</strong> <span class="badge bg-${color}">${status || 'UNKNOWN'}</span></div>
         <div><small class="card-text text-muted">Last checked: ${last_checked ? new Date(last_checked).toLocaleString() : 'Never'}</small></div>
       </div>
@@ -206,7 +223,7 @@ if (addServForm){
           'Content-Type': 'application/json',
           'CSRF-Token': csrfToken
       },
-      body: JSON.stringify({ name, endpoint  })
+      body: JSON.stringify({ name, endpoint, env: currentEnv })
       });
 
       if (res.ok) {
@@ -402,9 +419,6 @@ if (servSearch) {
   servSearch.addEventListener("input", debouncedFilter);
 }
 
-// Switching Environment
-let currentEnv = 'live'; // default
-
 document.querySelectorAll('.env-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.env-btn').forEach(b => b.classList.remove('active'));
@@ -413,6 +427,14 @@ document.querySelectorAll('.env-btn').forEach(btn => {
 
     // Later: fetch services for selected env
     console.log(`Switched to: ${currentEnv}`);
+
+    fetch(`/services?env=${currentEnv}`, { credentials: 'include' })
+      .then(res => res.json())
+      .then(services => {
+        renderServices(services); // your existing function to populate the UI
+      })
+      .catch(err => console.error(err));
+
   });
 });
 

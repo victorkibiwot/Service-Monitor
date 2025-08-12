@@ -60,8 +60,16 @@ router.get('/api/history', async (req, res) => {
 
 // Get all services
 router.get('/services', validateToken, async (req, res) => {
+  const { env } = req.query;
+
   try {
-    const result = await pool.query('SELECT * FROM services ORDER BY id ASC');
+    let result;
+    if (env && ['live', 'test'].includes(env)) {
+      result = await pool.query('SELECT * FROM services WHERE env = $1 ORDER BY id ASC', [env]);
+    } else {
+      result = await pool.query('SELECT * FROM services ORDER BY id ASC');
+    }
+    
     res.json(result.rows);
   } catch (err) {
     console.error('Error fetching services:', err);
@@ -71,14 +79,19 @@ router.get('/services', validateToken, async (req, res) => {
 
 // Add new service
 router.post('/api/services', validateToken, async (req, res) => {
-  const { name, endpoint } = req.body;
+  const { name, endpoint, env = 'live' } = req.body;
   if (!name || !endpoint) {
     return res.status(400).json({ error: 'Name and endpoint are required' });
   }
+
+  if (!['live', 'test'].includes(env)) {
+    return res.status(400).json({ error: 'Invalid env value' });
+  }
+
   try {
     const result = await pool.query(
-      'INSERT INTO services (name, endpoint) VALUES ($1, $2) RETURNING *',
-      [name, endpoint]
+      'INSERT INTO services (name, endpoint, env) VALUES ($1, $2, $3) RETURNING *',
+      [name, endpoint, env]
     );
     res.status(201).json(result.rows[0]);
   } catch (err) {

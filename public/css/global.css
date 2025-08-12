@@ -24,9 +24,16 @@ body {
 }
  
 body.sidebar-open {
-    margin-left: 260px; /* Match sidebar width */
+    /* margin-left: 260px; */
     transition: margin-left 0.4s ease-in-out;
 }
+
+/* Shift only content when sidebar is open */
+.sidebar-open .main-content,
+.sidebar-open .top-bar {
+    margin-left: 260px; /* Same as sidebar width */
+}
+
 
 /* Sidebar Overlay (Backdrop) */
 .sidebar-overlay {
@@ -50,7 +57,7 @@ body.sidebar-open {
 /* Navbar Styles (Sidebar and Top Bar) */
 .sidebar {
     height: 100%;
-    width: 0;
+    width: 260px;
     position: fixed;
     top: 0;
     left: 0;
@@ -64,7 +71,7 @@ body.sidebar-open {
 }
 
 .sidebar-open .sidebar {
-    width: 260px;
+    /* width: 260px; */
     transform: translateX(0); /* Slide in */
 }
 

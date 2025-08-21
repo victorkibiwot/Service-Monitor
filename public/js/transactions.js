@@ -37,10 +37,6 @@ const txChart = new Chart(ctx, {
   }
 });
 
-let lastSeq = null;
-let lastChange = null;
-const txHistory = [];
-
 // --- API calls ---
 const fetchHistory = async () => {
   try {
@@ -62,6 +58,11 @@ const fetchLatestData = async () => {
   }
 };
 
+let lastSeq = null;
+let lastTxCount = null;
+let lastChange = null;
+const txHistory = [];
+
 // --- Chart updates ---
 const updateChart = () => {
   txChart.data.labels = txHistory.map(entry => entry.time);
@@ -82,7 +83,8 @@ const updateChart = () => {
 const loadInitialHistory = async () => {
   const data = await fetchHistory();
   if (!data || data.code !== 200 || !Array.isArray(data.transactions)) return;
-
+  console.log(data);
+  
   txHistory.length = 0; // Clear old data
   data.transactions.forEach(item => {
     txHistory.push({
@@ -92,6 +94,14 @@ const loadInitialHistory = async () => {
   });
 
   updateChart();
+
+  // Initialize last known values from the latest history entry
+  if (txHistory.length > 0) {
+    const latest = txHistory[txHistory.length - 1];
+    lastTxCount = latest.txCount;
+    lastChange = latest.time;   // 🔑 set baseline from history
+    lastSeq = null;             // will be filled on first live fetch
+  }
 };
 
 // --- Incremental update ---
@@ -104,14 +114,28 @@ const updateMonitor = async () => {
   const txCount = data.daily_transactions;
   const fetchTime = new Date(Number(data.time));
 
-  const diffMins = lastSeq === seq && lastChange
-    ? (now - lastChange) / 60000
-    : 0;
+  // Case 1: Initial run (no lastSeq yet) → trust history baseline
+  if (lastSeq === null) {
+    lastSeq = seq;          // initialize it
+    lastTxCount = txCount;  // initialize
+    // lastChange was already set in loadInitialHistory()
+    // ✅ don't overwrite lastChange here
+  }
+  // Case 2: Subsequent runs → only update lastChange if data actually changed
+  else if (seq !== lastSeq || txCount !== lastTxCount) {
+    lastSeq = seq;
+    lastTxCount = txCount;
+    lastChange = now;  
+  }
+
+  // Always compute diffMins against lastChange
+  const diffMins = lastChange ? (now - lastChange) / 60000 : 0;
 
   let status = 'operational', badge = 'bg-success', icon = 'bi-check-circle';
   if (diffMins > 30) [status, badge, icon] = ['critical', 'bg-danger', 'bi-exclamation-triangle'];
   else if (diffMins > 20) [status, badge, icon] = ['warning', 'bg-warning', 'bi-exclamation-triangle'];
 
+  // --- Update UI ---
   const txEl = document.getElementById('dailyTransactionsValue');
   const newText = Number(txCount).toLocaleString();
   if (txEl && txEl.textContent !== newText) {
@@ -126,17 +150,11 @@ const updateMonitor = async () => {
   document.getElementById('statusBadge').className = `badge ${badge} fs-5 px-3 py-2 mb-2 d-inline-block`;
   document.getElementById('statusBadge').innerHTML = `<i class="bi ${icon} me-1"></i> ${status.charAt(0).toUpperCase() + status.slice(1)}`;
 
-  if (seq !== lastSeq) {
-    lastSeq = seq;
-    lastChange = now;
-  }
-
-  // Push new data and maintain constant length
+  // --- Keep chart updated ---
   txHistory.push({ time: fetchTime, txCount });
-  if (txHistory.length > 30) { // keep same as initial history size
+  if (txHistory.length > 30) {
     txHistory.shift();
   }
-
   updateChart();
 };
 

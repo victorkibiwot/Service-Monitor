@@ -15,6 +15,26 @@ router.get('/transactions', (req, res) => {
   res.render('transactions');
 });
 
+// Render the sessions page with expanded data
+router.get('/sessions', (req, res) => {
+  const users = [
+      { username: "Alice", program: "Finance", machine: "PC-101", module: "Payments", sessions: 120 },
+      { username: "Bob", program: "HR", machine: "PC-202", module: "Recruitment", sessions: 60 },
+      { username: "Charlie", program: "IT", machine: "PC-303", module: "Security", sessions: 15 },
+      { username: "Victor", program: "Finance", machine: "PC-104", module: "Payments", sessions: 11 },
+      { username: "Ian", program: "HR", machine: "PC-205", module: "Term-Deposit", sessions: 66 },
+      { username: "Christine", program: "IT", machine: "PC-302", module: "Security", sessions: 150 },
+      { username: "Moureen", program: "Finance", machine: "PC-100", module: "Networking", sessions: 31 },
+      { username: "Arnold", program: "HR", machine: "PC-225", module: "UI", sessions: 45 },
+      { username: "Dickson", program: "IT", machine: "PC-310", module: "Analytics", sessions: 20 }
+    ];
+  res.render("sessions", {
+    csrfToken: req.csrfToken(),
+    totalInactive: users.reduce((sum, user) => sum + user.sessions, 0),
+    users: users
+  });
+});
+
 
 // API route to return latest transaction info
 router.get('/api/latest-sequence', async (req, res) => {
@@ -57,6 +77,34 @@ router.get('/api/history', async (req, res) => {
   }
 });
 
+
+//Requests for kplc data
+router.get('/getSingleKplcTransactionData', async (req, res) => {
+  try {
+    const response = await axiosInstance3.get('/api/getSingleKplcTransactionData');
+    const data = response.data;
+
+    res.json(data);
+  } catch (error) {
+    console.error('Error fetching latest kplc transaction:', error.message);
+    res.status(500).json({ code: 500, error: 'Failed to fetch latest transaction' });
+  }
+});
+
+
+// API route to return last half hour sequence of transactions
+router.get('/getKplcTransactionData', async (req, res) => {
+  try {
+    const response = await axiosInstance3.get('/api/getKplcTransactionData');
+    const data = response.data;
+
+    res.json(data);
+    
+  } catch (error) {
+    console.error('Error fetching KPLC history:', error.message);
+    res.status(500).json({ code: 500, error: 'Failed to fetch history' });
+  }
+});
 
 // Get all services
 router.get('/services', validateToken, async (req, res) => {

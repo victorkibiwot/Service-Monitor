@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="csrf-token" content="<%= csrfToken %>">
+  <title>User Sessions</title>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+  <link rel="stylesheet" href="/css/global.css"/>
+  <link rel="stylesheet" href="/css/dash.css"/>
+  <link rel="stylesheet" href="/css/sessions.css"/>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- Theme detection -->
+  <script>
+    const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    document.documentElement.classList.toggle('dark-mode', theme === 'dark');
+    document.documentElement.setAttribute('data-theme-initial', theme);
+  </script>
+</head>
+<body>
+  <%- include('navbar', { currentPage: 'sessions' }) %>
+  <div class="sidebar-overlay"></div>
+  <div id="main" class="main-content">
+    <div class="container page-wrapper">
+      <h2 class="page-title mb-4">User Sessions</h2>
+
+      <!-- Total Inactive Sessions Card -->
+      <div class="card mb-4 text-center border shadow-sm">
+        <div class="card-body">
+          <% 
+            let badgeClass = totalInactive >= 1000 ? 'badge-critical' 
+                          : totalInactive >= 700 ? 'badge-warning' 
+                          : 'badge-good';
+          %>
+          <span class="badge fs-5 px-3 py-2 mb-2 mt-2 <%= badgeClass %> d-inline-block">
+            <i class="bi bi-exclamation-triangle-fill me-1"></i>
+            Total Inactive Sessions: <%= totalInactive %>
+          </span>
+        </div>
+      </div>
+
+      <!-- Users with Most Inactive Sessions -->
+      <div class="card border shadow-sm">
+        <div class="card-header bg-activity-header border-bottom">
+          <h5 class="mb-0">Top Users with Inactive Sessions</h5>
+        </div>
+        <div class="card-body">
+          <table class="table table-hover align-middle">
+            <thead>
+              <tr>
+                <th scope="col">Username</th>
+                <th scope="col">Program</th>
+                <th scope="col">Machine</th>
+                <th scope="col">Module</th>
+                <th scope="col">Session Count</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% users.forEach(user => { 
+                  let lightClass = user.sessions >= 100 ? 'light-red' 
+                                  : user.sessions >= 50 ? 'light-orange' 
+                                  : 'light-green';
+              %>
+              <tr class="session-row">
+                <td><i class="bi bi-person-circle me-2"></i> <%= user.username %></td>
+                <td><%= user.program %></td>
+                <td><%= user.machine %></td>
+                <td><%= user.module %></td>
+                <td><%= user.sessions %></td>
+                <td><span class="status-light <%= lightClass %>"></span></td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <%- include('footer') %>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/utils.js"></script>
+  <script src="/js/global.js"></script>
+  <script src="/js/sessions.js"></script>
+</body>
+</html>

@@ -59,10 +59,10 @@ router.post('/', async (req, res) => {
     });
 
   } catch (err) {
-    console.error('Login failed:', err.response?.data || err);
+    console.error('Login failed:', err.response?.message || err);
     res.json({
       success: false,
-      message: 'Invalid credentials. Please try again.'
+      message: err.response?.message
     });
   }
 });

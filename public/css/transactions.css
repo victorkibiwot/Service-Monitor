@@ -46,7 +46,6 @@ html.dark-mode .metrics-box {
 #statusBadge {
   font-weight: 500;
   letter-spacing: 0.5px;
-  border-radius: 20px;
 }
 
 html.dark-mode #statusBadge {
@@ -162,3 +161,19 @@ html.dark-mode .txn-btn.active {
 html.dark-mode .env-divider {
   background: rgba(255, 255, 255, 0.3);
 }
+
+
+
+.chart-container {
+  position: relative;
+  height: 400px;   /* desired height */
+  width: 100%;     /* full width */
+}
+
+/* Smaller legends */
+#kplcLineChart, 
+#kplcStackedChart, 
+#transactionChart {
+  font-size: 12px !important;
+}
+

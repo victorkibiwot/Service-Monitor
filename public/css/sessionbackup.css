@@ -1,0 +1,129 @@
+/* -----------------------------
+   User Sessions Page Styling
+------------------------------ */
+
+/* Badge thresholds */
+.badge-critical {
+  background-color: #dc3545 !important; /* red */
+}
+
+.badge-warning {
+  background-color: #ffc107 !important; /* orange */
+  color: #212529 !important;
+}
+
+.badge-good {
+  background-color: #28a745 !important; /* green */
+}
+
+/* User status light indicator */
+.status-light {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 8px;
+  animation: blink 1.5s infinite alternate;
+}
+
+.light-green {
+  background-color: #28a745;
+}
+
+.light-orange {
+  background-color: #ffc107;
+}
+
+.light-red {
+  background-color: #dc3545;
+}
+
+@keyframes blink {
+  from { opacity: 0.6; }
+  to   { opacity: 1; }
+}
+
+/* -----------------------------
+   Dark Mode Fixes
+------------------------------ */
+
+/* Ensure card body has dark background */
+html.dark-mode .card {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  background-color: var(--card-bg-dark);
+}
+
+.card {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Card Header Styling */
+.card-header.bg-activity-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #ddd;
+}
+
+html.dark-mode .card-header.bg-activity-header {
+  background-color: #2e2e2e;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; 
+  color: #e0e0e0;
+}
+
+/* Center title */
+.card-header h5 {
+  text-align: center;
+}
+
+/* -----------------------------
+  Table Styling
+------------------------------ */
+/* View Tickets-Specific Styles */
+:root {
+    --bg-content: #ffffff;
+    --content-text: #555;
+    --table-border: #dee2e6;
+    --table-header-bg: #dbe9f6;
+    --table-row-bg: #ffffff;
+    --table-row-alt-bg: #f8f9fa;
+    --table-row-hover-bg: #f1f3f5;
+    --card-bg-dark: #2c2c2c; /* Define for card background in dark mode */
+}
+
+html.dark-mode {
+    --bg-content: #2c2c2c;
+    --content-text: #bbb;
+    --table-border: #555;
+    --table-header-bg: #3a3a3a;
+    --table-row-bg: #2c2c2c;
+    --table-row-alt-bg: #343434;
+    --table-row-hover-bg: #7e7878;
+    --card-bg-dark: #2c2c2c;
+}
+
+.table {
+  background-color: var(--bg-content);
+  color: var(--content-text);
+  border-color: var(--table-border);
+  transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.table th {
+  background-color: var(--table-header-bg);
+  font-weight: 600;
+  border-color: var(--table-border);
+  color: var(--content-text);
+  text-align: center;
+  padding: 0.7rem 0.5rem;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+
+.table td {
+  border-color: var(--table-border);
+  background-color: var(--table-row-bg);
+  color: var(--content-text);
+  padding: 0.55rem 0.5rem;
+  vertical-align: middle;
+  text-align: center;
+  transition: background-color 0.3s, color 0.3s;
+}

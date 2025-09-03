@@ -83,7 +83,6 @@ const updateChart = () => {
 const loadInitialHistory = async () => {
   const data = await fetchHistory();
   if (!data || data.code !== 200 || !Array.isArray(data.transactions)) return;
-  console.log(data);
   
   txHistory.length = 0; // Clear old data
   data.transactions.forEach(item => {
@@ -327,7 +326,24 @@ const updateKplcMonitor = async () => {
   document.getElementById('kplcUpdated').textContent = latest.time.toLocaleString();
 
   // Badge logic (simplified for now)
-  let badge = 'bg-success', status = 'operational';
+  // --- Default badge setup
+  let badge = 'bg-success',
+      status = 'operational',
+      icon = 'bi-check-circle';
+
+  // --- Stale detection ---
+  // Compare first and last entry in history
+  let staleValues = false;
+  if (kplcHistory.length > 1) {
+    const first = kplcHistory[0];
+    const last = kplcHistory[kplcHistory.length - 1];
+
+    staleValues =
+      first.all === last.all &&
+      first.processed === last.processed &&
+      first.success === last.success &&
+      first.failed === last.failed;
+  }
 
   const now = new Date();
   const diffMins = (now - latest.time) / 60000;
@@ -342,30 +358,40 @@ const updateKplcMonitor = async () => {
   }
 
   // --- Priority rules ---
-  if (diffMins > 30) {
+  if (diffMins > 30 || staleValues) {
     badge = 'bg-danger';
     status = 'Critical: stale data';
+    icon = 'bi-exclamation-triangle';
   } else if (diffMins > 15) {
     badge = 'bg-warning';
     status = 'Delayed updates';
-  } else if (failStreak >= 5) {
+    icon = 'bi-exclamation-triangle';
+  } else if (failStreak >= 10) {
     badge = 'bg-danger';
     status = 'Critical: consecutive fails';
-  } else if (failStreak >= 3) {
+    icon = 'bi-exclamation-triangle';
+  } else if (failStreak >= 5) {
     badge = 'bg-warning';
     status = 'Repeated fails';
+    icon = 'bi-exclamation-triangle';
   } else if (failRate > 0.5) {
     badge = 'bg-danger';
     status = 'Critical: high failure rate';
+    icon = 'bi-exclamation-triangle';
   } else if (failRate > 0.3) {
     badge = 'bg-warning';
     status = 'Elevated failures';
+    icon = 'bi-exclamation-triangle';
   } else if (ratioProcessed < 0.5) {
     badge = 'bg-warning';
     status = 'Processing backlog';
+    icon = 'bi-exclamation-triangle';
   }
+
+  // --- Update badge UI ---
   document.getElementById('kplcStatusBadge').className = `badge ${badge} fs-5 px-3 py-2 mb-2 d-inline-block`;
-  document.getElementById('kplcStatusBadge').innerHTML = `<i class="bi bi-activity me-1"></i> ${status}`;
+  document.getElementById('kplcStatusBadge').innerHTML =
+    `<i class="bi ${icon} me-1"></i> ${status}`;
 };
 
 

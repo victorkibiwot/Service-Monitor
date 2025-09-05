@@ -314,6 +314,9 @@ const updateKplcMonitor = async () => {
   const latest = await fetchKplcLatest();
   if (!latest) return;
 
+  // keep previous value
+  const prev = kplcHistory[kplcHistory.length - 1];
+
   kplcHistory.push(latest);
   if (kplcHistory.length > 30) kplcHistory.shift();
   updateKplcChart();
@@ -351,10 +354,17 @@ const updateKplcMonitor = async () => {
   const failRate = latest.success > 0 ? latest.failed / latest.success : (latest.failed > 0 ? 1 : 0);
 
   // Track fail streak
-  if (latest.failed > 0) {
-    failStreak++;
-  } else {
-    failStreak = 0;
+  if (prev) {
+    if (latest.failed > prev.failed) {
+      // new fail happened
+      failStreak++;
+    } else if (latest.processed > prev.processed) {
+      // new transaction(s) processed but no fail increase -> success in between
+      failStreak = 0;
+    } else {
+      // nothing new processed, just holding steady (no change in metrics)
+      // keep current failStreak as-is
+    }
   }
 
   // --- Priority rules ---

@@ -166,7 +166,6 @@ const updateMonitor = async () => {
 })();
 
 
-
 // --- KPLC Chart ---
 const kplcLineCtx = document.getElementById('kplcLineChart').getContext('2d');
 const kplcLineChart = new Chart(kplcLineCtx, {
@@ -181,7 +180,7 @@ const kplcLineChart = new Chart(kplcLineCtx, {
     plugins: { legend: { labels: { usePointStyle: true, pointStyle: 'circle', boxWidth: 8, boxHeight: 8, padding: 50 } } },
     scales: {
       x: { title: { display: true, text: 'Time' } },
-      y: { title: { display: true, text: 'Count' }, beginAtZero: true }
+      y: { title: { display: true, text: 'Count' }, beginAtZero: false }
     }
   }
 });
@@ -196,8 +195,8 @@ const kplcPieChart = new Chart(kplcPieCtx, {
     datasets: [{
       data: [0, 0, 0, 0], // will update dynamically
       backgroundColor: [
-        'rgba(0,128,0,0.7)',       // green
-        'rgba(255,0,0,0.7)'        // red
+        'rgba(0, 146, 0, 0.7)',       // green
+        'rgba(201, 3, 3, 0.7)'        // red
       ],
       borderWidth: 0.2,
       radius: '50%',
@@ -207,6 +206,12 @@ const kplcPieChart = new Chart(kplcPieCtx, {
   options: {
     responsive: true,
     maintainAspectRatio: false,
+    layout: {
+      padding: {
+        top: 0,    // reduce top space
+        bottom: 0  // let legend sit closer
+      }
+    },
     plugins: {
       legend: {
         position: 'bottom',
@@ -278,27 +283,47 @@ const fetchKplcLatest = async () => {
   }
 };
 
+
 // --- Update KPLC Chart ---
 const updateKplcChart = () => {
   const labels = kplcHistory.map(e => e.time.toLocaleTimeString());
+  const allData = kplcHistory.map(e => e.all);
+  const processedData = kplcHistory.map(e => e.processed);
 
-  // Line chart update
+  // Update line chart
   kplcLineChart.data.labels = labels;
-  kplcLineChart.data.datasets[0].data = kplcHistory.map(e => e.all);
-  kplcLineChart.data.datasets[1].data = kplcHistory.map(e => e.processed);
+  kplcLineChart.data.datasets[0].data = allData;
+  kplcLineChart.data.datasets[1].data = processedData;
+
+  // --- Dynamic y-axis scaling ---
+  const allValues = [...allData, ...processedData];
+  if (allValues.length > 0) {
+    const minY = Math.min(...allValues);
+    const maxY = Math.max(...allValues);
+    const padding = Math.max(10, (maxY - minY) * 0.1);
+
+    // 🔑 Must overwrite scale config every time
+    kplcLineChart.options.scales.y = {
+      ...kplcLineChart.options.scales.y,
+      min: Math.floor(minY - padding),
+      max: Math.ceil(maxY + padding),
+      beginAtZero: false
+    };
+  }
+
   kplcLineChart.update();
 
-// --- Pie chart update (latest snapshot) ---
+  // --- Pie chart update ---
   const latest = kplcHistory[kplcHistory.length - 1];
-    if (latest) {
+  if (latest) {
     kplcPieChart.data.datasets[0].data = [
-        latest.success,
-        latest.failed
+      latest.success,
+      latest.failed
     ];
     kplcPieChart.update();
-    }
-
+  }
 };
+
 
 // --- Initialize ---
 const loadKplcHistory = async () => {

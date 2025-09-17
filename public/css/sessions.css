@@ -16,6 +16,25 @@
   background-color: #28a745 !important; /* green */
 }
 
+/* Metrics Box Styling */
+.metrics-box {
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  transition: background-color 0.3s;
+}
+
+html.dark-mode .metrics-box {
+  background-color: #2a2a2a;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Status Badge Adjustments */
+#badgeStatus {
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
 /* User status light indicator */
 .status-light {
   width: 14px;

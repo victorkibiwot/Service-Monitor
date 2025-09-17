@@ -15,26 +15,35 @@ router.get('/transactions', (req, res) => {
   res.render('transactions');
 });
 
-// Render the sessions page with expanded data
+// Render the sessions page (initial shell, data fetched client-side)
 router.get('/sessions', (req, res) => {
-  const users = [
-      { username: "Alice", program: "Finance", machine: "PC-101", module: "Payments", sessions: 120 },
-      { username: "Bob", program: "HR", machine: "PC-202", module: "Recruitment", sessions: 60 },
-      { username: "Charlie", program: "IT", machine: "PC-303", module: "Security", sessions: 15 },
-      { username: "Victor", program: "Finance", machine: "PC-104", module: "Payments", sessions: 11 },
-      { username: "Ian", program: "HR", machine: "PC-205", module: "Term-Deposit", sessions: 66 },
-      { username: "Christine", program: "IT", machine: "PC-302", module: "Security", sessions: 150 },
-      { username: "Moureen", program: "Finance", machine: "PC-100", module: "Networking", sessions: 31 },
-      { username: "Arnold", program: "HR", machine: "PC-225", module: "UI", sessions: 45 },
-      { username: "Dickson", program: "IT", machine: "PC-310", module: "Analytics", sessions: 20 }
-    ];
-  res.render("sessions", {
-    csrfToken: req.csrfToken(),
-    totalInactive: users.reduce((sum, user) => sum + user.sessions, 0),
-    users: users
-  });
+  try {
+    res.render("sessions", {
+      csrfToken: req.csrfToken()
+    });
+  } catch (error) {
+    console.error('Error rendering sessions page:', error.message);
+    res.status(500).json({ code: 500, error: 'Failed to render sessions page' });
+  }
 });
 
+// Proxy endpoint to get inactive session data
+router.get('/api/inactive-sessions', async (req, res) => {
+  try {
+    const response = await axiosInstance3.get('/api/getInactiveSessionData');
+    const { inactive_user_sessions, total_inactive_sessions, time, code = 200 } = response.data;
+
+    res.json({
+      code,
+      inactive_user_sessions,
+      total_inactive_sessions,
+      time
+    });
+  } catch (error) {
+    console.error('Error fetching inactive sessions:', error.message);
+    res.status(500).json({ code: 500, error: 'Failed to fetch inactive sessions' });
+  }
+});
 
 // API route to return latest transaction info
 router.get('/api/latest-sequence', async (req, res) => {

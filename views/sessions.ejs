@@ -28,56 +28,42 @@
     <div class="container page-wrapper">
       <h2 class="page-title mb-4">User Sessions</h2>
 
-      <!-- Total Inactive Sessions Card -->
-      <div class="card mb-4 text-center border shadow-sm">
+    <!-- Total Inactive Sessions Card -->
+    <div class="card mb-4 text-center border shadow-sm">
         <div class="card-body">
-          <% 
-            let badgeClass = totalInactive >= 1000 ? 'badge-critical' 
-                          : totalInactive >= 700 ? 'badge-warning' 
-                          : 'badge-good';
-          %>
-          <span class="badge fs-5 px-3 py-2 mb-2 mt-2 <%= badgeClass %> d-inline-block">
-            <i class="bi bi-exclamation-triangle-fill me-1"></i>
-            Total Inactive Sessions: <%= totalInactive %>
-          </span>
+            <span id="badgeStatus" class="badge bg-secondary fs-5 px-3 py-2 mb-2 mt-2 d-inline-block">
+            <i class="bi bi-hourglass-split me-1"></i> Loading...
+            </span>
+            <div class="metrics-box px-3 py-2 rounded text-center">
+                <p class="mb-1 small text-muted">Total Inactive Sessions: <span id="sessTotal">--</span></p>
+                <p class="mb-0 small text-muted">Last updated: <span id="sessUpdated">--</span></p> 
+            </div>
         </div>
-      </div>
+    </div>
 
-      <!-- Users with Most Inactive Sessions -->
-      <div class="card border shadow-sm">
-        <div class="card-header bg-activity-header border-bottom">
-          <h5 class="mb-0">Top Users with Inactive Sessions</h5>
-        </div>
-        <div class="card-body">
-          <table class="table table-hover align-middle">
-            <thead>
-              <tr>
-                <th scope="col">Username</th>
-                <th scope="col">Program</th>
-                <th scope="col">Machine</th>
-                <th scope="col">Module</th>
-                <th scope="col">Session Count</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% users.forEach(user => { 
-                  let rowClass = user.sessions >= 100 ? 'row-critical' 
-                                : user.sessions >= 50 ? 'row-warning' 
-                                : 'row-good';
-              %>
-              <tr class="<%= rowClass %>">
-                <td><i class="bi bi-person-circle me-2"></i> <%= user.username %></td>
-                <td><%= user.program %></td>
-                <td><%= user.machine %></td>
-                <td><%= user.module %></td>
-                <td><%= user.sessions %></td>
-              </tr>
-              <% }) %>
-            </tbody>
+    <!-- Users with Most Inactive Sessions -->
+    <div class="card border shadow-sm">
+    <div class="card-header bg-activity-header border-bottom">
+        <h5 class="mb-0">Top Users with Inactive Sessions</h5>
+    </div>
+    <div class="card-body">
+        <table class="table table-hover align-middle">
+        <thead>
+            <tr>
+            <th scope="col">Username</th>
+            <th scope="col">Module</th>
+            <th scope="col">Machine</th>
+            <th scope="col">Program</th>
+            <th scope="col">Session Count</th>
+            </tr>
+        </thead>
+        <tbody id="userTableBody">
+            <!-- Filled by JS -->
+        </tbody>
+        </table>
+    </div>
+    </div>
 
-          </table>
-        </div>
-      </div>
 
       <%- include('footer') %>
     </div>

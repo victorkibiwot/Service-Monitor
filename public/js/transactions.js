@@ -130,9 +130,9 @@ const updateMonitor = async () => {
   // Always compute diffMins against lastChange
   const diffMins = lastChange ? (now - lastChange) / 60000 : 0;
 
-  let status = 'operational', badge = 'bg-success', icon = 'bi-check-circle';
-  if (diffMins > 30) [status, badge, icon] = ['critical', 'bg-danger', 'bi-exclamation-triangle'];
-  else if (diffMins > 20) [status, badge, icon] = ['warning', 'bg-warning', 'bi-exclamation-triangle'];
+  let status = 'operational', badge = 'bg-success', icon = 'bi-check-circle-fill';
+  if (diffMins > 30) [status, badge, icon] = ['critical', 'bg-danger', 'bi-exclamation-triangle-fill'];
+  else if (diffMins > 20) [status, badge, icon] = ['warning', 'bg-warning', 'bi-exclamation-triangle-fill'];
 
   // --- Update UI ---
   const txEl = document.getElementById('dailyTransactionsValue');
@@ -357,7 +357,7 @@ const updateKplcMonitor = async () => {
   // --- Default badge setup
   let badge = 'bg-success',
       status = 'operational',
-      icon = 'bi-check-circle';
+      icon = 'bi-check-circle-fill';
 
   // --- Stale detection ---
   // Compare first and last entry in history
@@ -396,31 +396,31 @@ const updateKplcMonitor = async () => {
   if (diffMins > 30 || staleValues) {
     badge = 'bg-danger';
     status = 'Critical: stale data';
-    icon = 'bi-exclamation-triangle';
+    icon = 'bi-exclamation-triangle-fill';
   } else if (diffMins > 15) {
     badge = 'bg-warning';
     status = 'Delayed updates';
-    icon = 'bi-exclamation-triangle';
+    icon = 'bi-exclamation-triangle-fill';
   } else if (failStreak >= 10) {
     badge = 'bg-danger';
     status = 'Critical: consecutive fails';
-    icon = 'bi-exclamation-triangle';
+    icon = 'bi-exclamation-triangle-fill';
   } else if (failStreak >= 5) {
     badge = 'bg-warning';
     status = 'Repeated fails';
-    icon = 'bi-exclamation-triangle';
+    icon = 'bi-exclamation-triangle-fill';
   } else if (failRate > 0.5) {
     badge = 'bg-danger';
     status = 'Critical: high failure rate';
-    icon = 'bi-exclamation-triangle';
+    icon = 'bi-exclamation-triangle-fill';
   } else if (failRate > 0.3) {
     badge = 'bg-warning';
     status = 'Elevated failures';
-    icon = 'bi-exclamation-triangle';
+    icon = 'bi-exclamation-triangle-fill';
   } else if (ratioProcessed < 0.5) {
     badge = 'bg-warning';
     status = 'Processing backlog';
-    icon = 'bi-exclamation-triangle';
+    icon = 'bi-exclamation-triangle-fill';
   }
 
   // --- Update badge UI ---

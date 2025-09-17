@@ -57,9 +57,7 @@ async function fetchSessionData() {
 
 // Convert timestamp -> readable
 function formatTimestamp(raw) {
-  // Example: raw = 175890030451556 (nanoseconds since epoch)
-  let millis = Math.floor(raw / 1000); 
-  const date = new Date(millis);
+  const date = new Date(raw);
   return date.toLocaleString(); // e.g., "9/17/2025, 1:30:45 PM"
 }
 

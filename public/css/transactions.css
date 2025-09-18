@@ -48,6 +48,15 @@ html.dark-mode .metrics-box {
   letter-spacing: 0.5px;
 }
 
+#kplcStatusBadge {
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+html.dark-mode #kplcStatusBadge {
+  color: #fff;
+}
+
 html.dark-mode #statusBadge {
   color: #fff;
 }

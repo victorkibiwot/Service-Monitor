@@ -191,12 +191,13 @@ const kplcPieCtx = document.getElementById('kplcStackedChart').getContext('2d');
 const kplcPieChart = new Chart(kplcPieCtx, {
   type: 'doughnut',
   data: {
-    labels: ['Successful', 'Failed'],
+    labels: ['Successful', 'Failed', 'Esb'],
     datasets: [{
-      data: [0, 0, 0, 0], // will update dynamically
+      data: [0, 0, 0], // will update dynamically
       backgroundColor: [
         'rgba(0, 146, 0, 0.7)',       // green
-        'rgba(201, 3, 3, 0.7)'        // red
+        'rgba(201, 3, 3, 0.7)',
+        'rgba(52, 156, 184, 0.7)'
       ],
       borderWidth: 0.2,
       radius: '50%',
@@ -255,6 +256,7 @@ const fetchKplcHistory = async () => {
       all: item.all,
       processed: item.processed,
       success: item.successful,
+      esb:item.esb,
       failed: item.failed
     }));
   } catch (err) {
@@ -275,6 +277,7 @@ const fetchKplcLatest = async () => {
       all: t.all,
       processed: t.processed,
       success: t.successful,
+      esb:t.esb,
       failed: t.failed
     };
   } catch (err) {
@@ -318,7 +321,8 @@ const updateKplcChart = () => {
   if (latest) {
     kplcPieChart.data.datasets[0].data = [
       latest.success,
-      latest.failed
+      latest.failed,
+      latest.esb
     ];
     kplcPieChart.update();
   }
@@ -350,13 +354,14 @@ const updateKplcMonitor = async () => {
   document.getElementById('kplcAll').textContent = latest.all;
   document.getElementById('kplcProcessed').textContent = latest.processed;
   document.getElementById('kplcSuccess').textContent = latest.success;
+  document.getElementById('kplcEsb').textContent = latest.esb;
   document.getElementById('kplcFailed').textContent = latest.failed;
   document.getElementById('kplcUpdated').textContent = latest.time.toLocaleString();
 
   // Badge logic (simplified for now)
   // --- Default badge setup
   let badge = 'bg-success',
-      status = 'operational',
+      status = 'Operational',
       icon = 'bi-check-circle-fill';
 
   // --- Stale detection ---
@@ -421,6 +426,10 @@ const updateKplcMonitor = async () => {
     badge = 'bg-warning';
     status = 'Processing backlog';
     icon = 'bi-exclamation-triangle-fill';
+  } else {
+    badge = 'bg-success',
+    status = 'Operational',
+    icon = 'bi-check-circle-fill';
   }
 
   // --- Update badge UI ---

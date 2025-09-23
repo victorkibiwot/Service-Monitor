@@ -380,4 +380,12 @@ function escapeHtmlAttr(str) {
 // -----------------------------
 fetchServices();
 // Poll to refresh the dashboard (every 3s). You can adjust or remove this if too chatty.
-const servicesPoll = setInterval(fetchServices, 3000);
+// Poll every 3s: ping first, then refresh services
+const servicesPoll = setInterval(async () => {
+  try {
+    await fetch('/api/services/ping', { credentials: 'include' });
+  } catch (err) {
+    console.error('Ping failed:', err);
+  }
+  fetchServices();
+}, 3000);

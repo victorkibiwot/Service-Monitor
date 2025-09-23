@@ -10,7 +10,12 @@ router.get('/dashboard', (req, res) => {
   res.render('dashboard');
 });
 
-// Render the transaction monitor with dummy data
+// Render the maintenance tab
+router.get('/maintenance', (req, res) => {
+  res.render('maintenance');
+});
+
+// Render the transaction monitor
 router.get('/transactions', (req, res) => {
   res.render('transactions');
 });
@@ -26,6 +31,7 @@ router.get('/sessions', (req, res) => {
     res.status(500).json({ code: 500, error: 'Failed to render sessions page' });
   }
 });
+
 
 // Proxy endpoint to get inactive session data
 router.get('/api/inactive-sessions', async (req, res) => {

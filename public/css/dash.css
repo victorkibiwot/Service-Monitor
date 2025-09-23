@@ -9,6 +9,10 @@
   --bg-dark: #1e1e1e;
   --text-dark: #e0e0e0;
   --card-bg-dark: #2b2b2b;
+  --bg-content: #ffffff;
+  --content-text: #555;
+  --table-border: #ddd;
+  --button-bg: #007bff;
 
   --bg-sidebar: #ffffff;
   --sidebar-text: #444;
@@ -21,6 +25,10 @@ html.dark-mode {
   --sidebar-text: #e0e0e0;
   --sidebar-hover-bg: #3a3a3a;
   --sidebar-hover-text: #4da8ff;
+  --bg-content: #2c2c2c;
+  --content-text: #bbb;
+  --table-border: rgba(255, 255, 255, 0.08);
+  --button-bg: #4da8ff;
 }
 
 /* Base styles */
@@ -295,174 +303,196 @@ html.dark-mode #servicesContainer {
   margin-bottom: 5px !important;
 }
 
-/* Edit mode styling */
-.service-card.card-edit-mode {
-  border: 2px dashed;
-  animation: pulse 1.5s infinite;
-  cursor: pointer;
-  transition: transform 0.3s;
+
+
+/* Search Bar Styles */
+.search-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 70%;
 }
 
-/* Edit mode styling */
-.service-card.card-edit-mode:hover {
-  border: 2px solid;
-}
-
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.5);
-  }
-  70% {
-    transform: scale(1.02);
-    box-shadow: 0 0 10px 10px rgba(0, 123, 255, 0);
-  }
-  100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
-  }
-}
-
-.card-edit-mode::after {
-  content: "🛠️ Edit";
-  font-weight: bold;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: #0d6efd;
-  color: white;
-  padding: 2px 6px;
-  font-size: 12px;
-  border-radius: 4px;
-}
-
-
-/* Delete Service styles */
-@keyframes wiggle {
-  0% { transform: rotate(-1deg); }
-  50% { transform: rotate(1deg); }
-  100% { transform: rotate(-1deg); }
-}
-
-.service-card.card-delete-mode {
-  border: 2px dashed;
-  animation: wiggle 0.3s infinite;
-  cursor: pointer;
+.search-input {
+  width: 100%;
+  max-width: 400px;
   position: relative;
 }
 
-.service-card.card-delete-mode:hover {
-  border: 2px solid;
+.search-input-field {
+  background-color: var(--bg-content);
+  color: var(--content-text);
+  border: 1px solid var(--table-border) !important; /* unified border */
+  border-left: none; /* merges with icon */
+  border-radius: 0 20px 20px 0; /* rounded right only */
+  height: 40px;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.card-delete-mode::after {
-  content: "🗑️ Delete";
-  font-weight: bold;
-  top: 10px;
-  right: 10px;
-  position: absolute;
-  background: #f3808c;
-  color: white;
-  padding: 2px 6px;
-  font-size: 12px;
-  border-radius: 4px;
-  z-index: 5;
+.search-input-field:focus {
+  border-color: var(--button-bg) !important;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.2);
+  outline: none;
 }
 
-html.dark-mode .card-delete-mode::after {
-  background: #c82333;
+.search-input-field::placeholder {
+  color: var(--content-text);
+  opacity: 0.6;
 }
 
-
-/* Search bar base */
-.search-bar-container input.form-control {
-  background-color: #ffffff;
-  color: #333;
-  border: 1px solid #ccc;
-  transition: background-color 0.3s, color 0.3s;
+/* Search icon and separator */
+.input-group-text {
+  background-color: transparent;
+  border: 1px solid var(--table-border) !important; /* unified border */
+  border-right: none; /* merges with input */
+  border-radius: 20px 0 0 20px; /* rounded left only */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  pointer-events: none;
+  transition: all 0.3s ease;
 }
 
-.search-bar-container input.form-control::placeholder {
-  color: #999;
+.input-group-text::after {
+  content: '';
+  display: block;
+  width: 1px;
+  height: 60%;
+  margin-left: 8px;
+  background-color: var(--table-border);
+  transition: background-color 0.3s ease;
 }
 
-/* Dark mode search bar */
-html.dark-mode .search-bar-container input.form-control {
-  background-color: #2c2c2c;
-  color: #f1f1f1;
-  border: 1px solid #555;
+/* Unified focus effect on both input and icon */
+.search-input-field:focus,
+.search-input-field:focus ~ .input-group-text,
+.input-group-text:focus-within {
+  border-color: var(--button-bg) !important;
 }
 
-html.dark-mode .search-bar-container input.form-control::placeholder {
+/* Dark mode overrides */
+html.dark-mode .input-group-text,
+html.dark-mode .search-input-field {
+  border: 1px solid #555 !important;
+}
+
+html.dark-mode .input-group-text::after {
+  background-color: #555;
+}
+
+html.dark-mode .search-input-field {
+  background-color: var(--bg-content);
+  color: var(--content-text);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+html.dark-mode .search-input-field:focus {
+  border-color: #0d6efd !important;
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.4);
+}
+
+html.dark-mode .search-input-field::placeholder {
   color: #cccccc;
+  opacity: 1;
 }
 
-
-html.dark-mode #serviceSearchInput {
-  background-color: #2c2c2c;
+html.dark-mode .input-group-text {
   color: #f1f1f1;
-  border: 1px solid #555;
 }
 
-html.dark-mode input[type="text"],
-html.dark-mode input[type="search"] {
-  border: 1px solid #555;
-  background-color: #121212;
-  color: #eee;
-}
 
-html.dark-mode input[type="text"]:focus,
-html.dark-mode input[type="search"]:focus {
-  border-color: #888;
-}
+
 
 
 
 /* New Design Style */
-.modern-card:hover::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  box-shadow: 0 0 15px rgba(18, 46, 44, 0.3); /* Customize the glow color */
-  opacity: 0.6;
-  pointer-events: none;
-}
-
-/* New Design Style */
-html.dark-mode .modern-card:hover::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  box-shadow: 0 0 15px rgba(193, 217, 242, 0.3); /* Customize the glow color */
-  opacity: 0.6;
-  pointer-events: none;
-}
-
-
 .modern-card {
-  position: relative;
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--card-bg-light);
   border-radius: 16px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  color: inherit;
-}
-
-html.dark-mode .modern-card {
-  background: rgba(44, 44, 44, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: none;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+  cursor: pointer;
 }
 
 .modern-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 16px 35px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
 }
+
+html.dark-mode .modern-card {
+  background: var(--card-bg-dark);
+}
+
+.status-badge {
+  font-size: 0.75rem;
+  padding: 0.4em 0.7em;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+}
+
+.service-url {
+  word-break: break-word;
+}
+
+.response-time {
+  font-style: italic;
+}
+
+
+
+/* Edit/Delete button group inside card footer */
+.modern-card .btn-group .btn {
+  padding: 0.35rem 0.55rem;
+  font-size: 0.8rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  transition: all 0.2s ease;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text-light);
+  border: none;
+}
+
+/* Dark mode */
+html.dark-mode .modern-card .btn-group .btn {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-dark);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Hover effect */
+.modern-card .btn-group .btn:hover {
+  background-color: var(--bs-primary);
+  color: #fff;
+}
+
+/* Dark mode hover */
+html.dark-mode .modern-card .btn-group .btn:hover {
+  background-color: var(--bs-primary);
+  color: #fff;
+  border-color: var(--bs-primary);
+}
+
+
+/* Rounded edges per button */
+.modern-card .btn-group .btn:first-child {
+  border-radius: 8px 0 0 8px; /* Round left side only */
+}
+
+.modern-card .btn-group .btn:last-child {
+  border-radius: 0 8px 8px 0; /* Round right side only */
+}
+
+
+
+
+
 
 
 .status-success { background: rgba(40, 167, 69, 0.1); }

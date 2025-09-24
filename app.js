@@ -10,6 +10,7 @@ const cookieParser = require('cookie-parser');
 const flash = require('connect-flash');
 const authRoutes = require('./routes/authRoutes');
 const monitorRoutes = require('./routes/monitorRoutes');
+require("./logger"); // Require the logger utility to store the logs
 
 
 app.use(cookieParser());

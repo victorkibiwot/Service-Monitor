@@ -3,6 +3,7 @@ const router = express.Router();
 const { axiosInstance, axiosInstance2} = require('../utils/axios');
 const qs = require('qs');
 const validateToken = require('./middlewares/validateToken');
+require("../logger"); // Require the logger utility to store the logs
 
 
 // login routes

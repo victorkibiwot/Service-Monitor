@@ -1,5 +1,6 @@
 // middlewares/validateToken.js
 const { axiosInstance} = require('../../utils/axios');
+require("../../logger"); // Require the logger utility to store the logs
 
 const validateTokenMiddleware = async (req, res, next) => {
   const token = req.session.token;

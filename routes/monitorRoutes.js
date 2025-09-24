@@ -4,6 +4,7 @@ const { axiosInstance, axiosInstance2, axiosInstance3, axiosInstance4} = require
 const pool = require('../db');
 const axios = require('axios');
 const validateToken = require('./middlewares/validateToken');
+require("../logger"); // Require the logger utility to store the logs
 
 // Render the dashboard
 router.get('/dashboard', (req, res) => {

@@ -1,0 +1,17 @@
+[
+  {
+    "timestamp": "2025-09-24T08:53:29.019Z",
+    "level": "INFO",
+    "message": "[dotenv@17.2.0] injecting env (0) from .env \u001b[2m(tip: ⚙️  override existing env vars with { override: true })\u001b[0m"
+  },
+  {
+    "timestamp": "2025-09-24T08:53:29.107Z",
+    "level": "INFO",
+    "message": "✅ HTTP server running at http://localhost:3001"
+  },
+  {
+    "timestamp": "2025-09-24T08:53:29.137Z",
+    "level": "INFO",
+    "message": "✅ services table ready"
+  }
+]

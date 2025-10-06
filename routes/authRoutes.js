@@ -6,8 +6,16 @@ const validateToken = require('./middlewares/validateToken');
 require("../logger"); // Require the logger utility to store the logs
 
 
-// login routes
+// login route
 router.get('/', (req, res) => {
+  const { token, jsessionid} = req.session;
+
+  // If session already exists, redirect user to dashboard
+  if (token && jsessionid) {
+    return res.redirect('/dashboard');
+  }
+
+  // Otherwise, render login page with fresh CSRF token
   res.render('login', {
     csrfToken: req.csrfToken()
   });
